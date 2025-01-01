@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-PT" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body>
+
+<h1>Painel Administrativo</h1>
+
+<!-- Gerenciar Produtos -->
+<section ng-controller="produtosController">
+    <h2>Lista de Produtos</h2>
+    <ul>
+        <li ng-repeat="produto in produtos">
+            <span>
+                {{ produto.nomeProduto }} - {{ produto.preco | currency:"€" }} - {{ produto.categoria }}
+            </span>
+            <div class="button-group">
+                <button ng-click="editarProduto(produto)">Editar</button>
+                <button ng-click="deleteProduto(produto._id)">Apagar</button>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Formulário para Adicionar Produto -->
+    <h2>Adicionar Produto</h2>
+    <form ng-submit="addProduto()">
+        <label>Nome:</label>
+        <input type="text" ng-model="novoProduto.nomeProduto" placeholder="Nome do Produto" required>
+        <br>
+        <label>Preço:</label>
+        <input type="number" ng-model="novoProduto.preco" placeholder="Preço" required>
+        <br>
+        <label>Categoria:</label>
+        <input type="text" ng-model="novoProduto.categoria" placeholder="Categoria" required>
+        <br>
+        <label>Stock:</label>
+        <input type="number" ng-model="novoProduto.stock" placeholder="Quantidade em Stock" required>
+        <br>
+        <label>Descrição:</label>
+        <textarea ng-model="novoProduto.descricao" placeholder="Descrição"></textarea>
+        <br>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <!-- Formulário de Edição -->
+    <div ng-show="editingProduto">
+        <h2>Editar Produto</h2>
+        <form ng-submit="salvarProduto()">
+            <label>Nome:</label>
+            <input type="text" ng-model="editingProduto.nomeProduto" required>
+            <br>
+            <label>Preço:</label>
+            <input type="number" ng-model="editingProduto.preco" required>
+            <br>
+            <label>Categoria:</label>
+            <input type="text" ng-model="editingProduto.categoria" required>
+            <br>
+            <button type="submit">Salvar</button>
+            <button type="button" ng-click="editingProduto = null">Cancelar</button>
+        </form>
+    </div>
+</section>
+
+<!-- Gerenciar Clientes -->
+<section ng-controller="clientesController">
+    <h2>Clientes</h2>
+    <form ng-submit="adicionarCliente()">
+        <input type="text" ng-model="novoCliente._id" placeholder="ID do Cliente (ex: CLI001)" required>
+        <input type="text" ng-model="novoCliente.nome" placeholder="Nome" required>
+        <input type="number" ng-model="novoCliente.idade" placeholder="Idade" required>
+        <input type="email" ng-model="novoCliente.email" placeholder="Email" required>
+        <input type="text" ng-model="novoCliente.endereco" placeholder="Endereço" required>
+        <input type="text" ng-model="novoCliente.telefone" placeholder="Telefone (opcional)">
+        <button type="submit">Adicionar Cliente</button>
+    </form>
+
+    <h2>Lista de Clientes</h2>
+    <ul>
+        <li ng-repeat="cliente in clientes">
+            {{ cliente.nome }} - {{ cliente.email }}
+            <button ng-click="removerCliente(cliente._id)">Deletar</button>
+        </li>
+    </ul>
+</section>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    label {
+        display: block;
+        margin: 5px 0;
+    }
+
+    input, textarea {
+        width: 300px;
+        margin-bottom: 10px;
+        padding: 5px;
+    }
+
+    button {
+        padding: 8px 12px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    .button-group button:nth-child(2) {
+        background-color: #dc3545;
+    }
+
+    .button-group button:nth-child(2):hover {
+        background-color: #c82333;
+    }
+</style>
+</body>
+</html>
