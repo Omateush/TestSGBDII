@@ -68,6 +68,7 @@
 <!-- Gerenciar Clientes -->
 <section ng-controller="clientesController">
     <h2>Clientes</h2>
+    <!-- Formulário para adicionar clientes -->
     <form ng-submit="adicionarCliente()">
         <input type="text" ng-model="novoCliente._id" placeholder="ID do Cliente (ex: CLI001)" required>
         <input type="text" ng-model="novoCliente.nome" placeholder="Nome" required>
@@ -78,13 +79,43 @@
         <button type="submit">Adicionar Cliente</button>
     </form>
 
+    <!-- Lista de clientes -->
     <h2>Lista de Clientes</h2>
     <ul>
         <li ng-repeat="cliente in clientes">
-            {{ cliente.nome }} - {{ cliente.email }}
-            <button ng-click="removerCliente(cliente._id)">Deletar</button>
+            <span>
+                {{ cliente.nome }} - {{ cliente.email }}
+            </span>
+            <div class="button-group">
+                <button ng-click="editarCliente(cliente)">Editar</button>
+                <button ng-click="removerCliente(cliente._id)">Deletar</button>
+            </div>
         </li>
     </ul>
+
+    <!-- Formulário de edição de clientes -->
+    <div ng-show="editingCliente">
+        <h2>Editar Cliente</h2>
+        <form ng-submit="salvarCliente()">
+            <label>Nome:</label>
+            <input type="text" ng-model="editingCliente.nome" required>
+            <br>
+            <label>Email:</label>
+            <input type="email" ng-model="editingCliente.email" required>
+            <br>
+            <label>Idade:</label>
+            <input type="number" ng-model="editingCliente.idade" required>
+            <br>
+            <label>Endereço:</label>
+            <input type="text" ng-model="editingCliente.endereco" required>
+            <br>
+            <label>Telefone:</label>
+            <input type="text" ng-model="editingCliente.telefone">
+            <br>
+            <button type="submit">Salvar Alterações</button>
+            <button type="button" ng-click="cancelarEdicao()">Cancelar</button>
+        </form>
+    </div>
 </section>
 
 <style>

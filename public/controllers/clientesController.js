@@ -1,24 +1,9 @@
 app.controller("clientesController", function ($scope, $http) {
-    $scope.novoCliente = {};
     $scope.clientes = [];
+    $scope.novoCliente = {};
+    $scope.editingCliente = null;
 
-    // Função para adicionar cliente
-    $scope.adicionarCliente = function () {
-        console.log("Dados enviados para o backend:", $scope.novoCliente); // Verificar o que está sendo enviado
-
-        $http.post("/api/clientes", $scope.novoCliente)
-            .then(function (response) {
-                console.log("Cliente adicionado com sucesso:", response.data);
-                $scope.clientes.push(response.data); // Atualiza a lista de clientes na página
-                $scope.novoCliente = {}; // Limpa o formulário
-            })
-            .catch(function (error) {
-                console.error("Erro ao adicionar cliente:", error);
-                alert("Erro ao adicionar cliente. Verifique os dados e tente novamente.");
-            });
-    };
-
-    // Obter lista de clientes
+    // Obter todos os clientes
     $scope.getClientes = function () {
         $http.get("/api/clientes")
             .then(function (response) {
@@ -27,6 +12,58 @@ app.controller("clientesController", function ($scope, $http) {
             .catch(function (error) {
                 console.error("Erro ao buscar clientes:", error);
             });
+    };
+
+    // Adicionar cliente
+    $scope.adicionarCliente = function () {
+        $http.post("/api/clientes", $scope.novoCliente)
+            .then(function (response) {
+                $scope.clientes.push(response.data); // Atualiza a lista
+                $scope.novoCliente = {}; // Limpa o formulário
+            })
+            .catch(function (error) {
+                console.error("Erro ao adicionar cliente:", error);
+                alert("Erro ao adicionar cliente.");
+            });
+    };
+
+    // Iniciar edição do cliente
+    $scope.editarCliente = function (cliente) {
+        $scope.editingCliente = angular.copy(cliente); // Cópia para edição
+    };
+
+    // Salvar edição do cliente
+    $scope.salvarCliente = function () {
+        const cliente = $scope.editingCliente;
+        $http.put(`/api/clientes/${cliente._id}`, cliente)
+            .then(function (response) {
+                const index = $scope.clientes.findIndex(c => c._id === cliente._id);
+                $scope.clientes[index] = response.data; // Atualiza a lista
+                $scope.editingCliente = null; // Cancela edição
+            })
+            .catch(function (error) {
+                console.error("Erro ao editar cliente:", error);
+                alert("Erro ao salvar alterações.");
+            });
+    };
+
+    // Cancelar edição
+    $scope.cancelarEdicao = function () {
+        $scope.editingCliente = null; // Cancela o estado de edição
+    };
+
+    // Deletar cliente
+    $scope.removerCliente = function (id) {
+        if (confirm("Tem certeza que deseja deletar este cliente?")) {
+            $http.delete(`/api/clientes/${id}`)
+                .then(function () {
+                    $scope.clientes = $scope.clientes.filter(c => c._id !== id); // Remove da lista
+                })
+                .catch(function (error) {
+                    console.error("Erro ao deletar cliente:", error);
+                    alert("Erro ao deletar cliente.");
+                });
+        }
     };
 
     // Inicializa a lista de clientes

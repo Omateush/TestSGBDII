@@ -5,13 +5,11 @@ const Cliente = require("../models/Cliente");
 // Criar cliente (POST)
 router.post("/", async (req, res) => {
     try {
-        console.log("Dados recebidos no backend:", req.body); // Verifica os dados enviados pelo frontend
-        const cliente = new Cliente(req.body); // Cria um novo cliente com os dados recebidos
-        await cliente.save(); // Salva no MongoDB
-        res.status(201).json(cliente); // Retorna o cliente criado
+        const cliente = new Cliente(req.body);
+        await cliente.save();
+        res.status(201).json(cliente);
     } catch (err) {
-        console.error("Erro ao adicionar cliente:", err.message);
-        res.status(400).json({ error: err.message }); // Retorna erro se algo deu errado
+        res.status(400).json({ error: err.message });
     }
 });
 
@@ -41,7 +39,7 @@ router.delete("/:id", async (req, res) => {
     try {
         const cliente = await Cliente.findByIdAndDelete(req.params.id);
         if (!cliente) return res.status(404).json({ error: "Cliente não encontrado" });
-        res.status(204).send();
+        res.status(204).send(); // Retorna sem corpo
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
